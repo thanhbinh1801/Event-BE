@@ -6,8 +6,8 @@ export default class UserService {
     this.UserModel = UserModel;
   }
 
-  async getAllUsers() {
-    const users = await this.UserModel.find({});
+  async getAllUsers(page = 1, limit = 10) {
+    const users = await this.UserModel.find({}).skip((page - 1) * limit).limit(limit);
     if (!users || users.length === 0) {
       throw new NotFoundError("No users found");
     }

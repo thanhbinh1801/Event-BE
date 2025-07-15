@@ -44,7 +44,7 @@ export default class AuthControllers {
   ResetPassword = async (req, res, next) => {
     const { email, passwordResetToken, newPassword } = req.body;
     const data = {email, passwordResetToken, newPassword };
-    const resetedPassword = await this.AuthService.ResetPassword(data);
+    const resetedPassword = await this.AuthService.resetPassword(data);
     new OK({
       message: "Reset password successfully"
     }).send(res);

@@ -6,19 +6,17 @@ export default class EventService {
     this.RegistrationsModel = RegistrationsModel;
   }
 
-  async createEvent(data) {
-    if(!data){
+  async createEvent(data, userId) {
+    if(!data || !userId){
       throw new BadRequestError("event data is required");
     }
-    const event = await this.EventModel.create(data);
-    return event;
+    const event = await this.EventModel.create({...data, createdBy: userId});
+    return event; 
   }
 
-  async getAllEvent(){
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const allEvents = await this.EventModel.find().skip( (page-1) * limit).limit(limit);
-    if(!allEvents){
+  async getAllEvents(page = 1, limit = 10) {
+    const allEvents = await this.EventModel.find().skip((page - 1) * limit).limit(limit);
+    if (!allEvents) {
       throw new NotFoundError("event not found");
     }
     return allEvents;

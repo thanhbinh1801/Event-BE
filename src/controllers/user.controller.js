@@ -6,7 +6,9 @@ export default class UserController {
   }
 
   getAllUsers = async ( req, res, next ) => {
-    const users = await this.UserService.getAllUsers();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const users = await this.UserService.getAllUsers(page, limit);
     return new OK ({
       message: "Users retrieved successfully",
       metadata: users

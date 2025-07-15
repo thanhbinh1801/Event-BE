@@ -77,7 +77,7 @@ export default class AuthService {
     if(!user){
       throw new NotFoundError("Email or passwordResetToken not found");
     }
-    const hashedNewPassword = HashUtil.hashPW(data.newPassword);
+    const hashedNewPassword = await HashUtil.hashPW(data.newPassword);
     user.password = hashedNewPassword;
     user.passwordResetToken = null;
     user.passwordResetExpiration = null

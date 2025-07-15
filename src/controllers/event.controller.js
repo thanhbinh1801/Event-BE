@@ -2,13 +2,14 @@ import { OK, CREATED } from '../handler/success.response.js';
 
 
 export default class EventControllers {
-  constructor(UserService){
-    this.UserService = UserService;
+  constructor(EventService){
+    this.EventService = EventService;
   }
 
   createEvent = async (req, res, next) => {
     const data = req.body;
-    const event = await this.UserService.createEvent(data);
+    const userId = req.user.id;
+    const event = await this.EventService.createEvent(data, userId);
     new CREATED({
       message: "create event successfully",
       metadata: event
@@ -16,7 +17,9 @@ export default class EventControllers {
   }
 
   getAllEvents = async (req, res, next) => {
-    const allEvents = await this.UserService.getAllEvents();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const allEvents = await this.EventService.getAllEvents(page, limit);
     new OK({
       message: "event retrieved successfully",
       metadata: allEvents
@@ -25,7 +28,7 @@ export default class EventControllers {
 
   getEventById = async (req, res, next) => {
     const eventId = req.params;
-    const event = await this.UserService.getEventById(eventId);
+    const event = await this.EventService.getEventById(eventId);
     new OK({
       message: "event retrieved successfully",
       metadata: event
@@ -35,7 +38,7 @@ export default class EventControllers {
   updateEvent = async (req, res, next) => {
     const data = req.body;
     const eventId = req.params;
-    const updateEvent = await this.UserService.updateEvent(data,eventId);
+    const updateEvent = await this.EventService.updateEvent(data,eventId);
     new OK({
       message: "update event successfully",
       metadata: updateEvent
@@ -44,7 +47,7 @@ export default class EventControllers {
 
   deleteEvent = async (req, res, next) => {
     const eventId = req.params;
-    const event = await this.UserService.deleteEvent(eventId);
+    const event = await this.EventService.deleteEvent(eventId);
     new OK({
       message: "delete event successfully"
     }).send(res);
@@ -52,7 +55,7 @@ export default class EventControllers {
   
   deleteEvent = async (req, res, next) => {
     const eventId = req.params;
-    const event = await this.UserService.getEventById(eventId);
+    const event = await this.EventService.getEventById(eventId);
     new OK({
       message: "event retrieved successfully",
       metadata: event
@@ -61,7 +64,7 @@ export default class EventControllers {
 
   lockEvent = async (req, res, next) => {
     const eventId = req.params;
-    const event = await this.UserService.lockEvent(eventId);
+    const event = await this.EventService.lockEvent(eventId);
     new OK({
       message: "lock event successfully",
       metadata: event
@@ -70,7 +73,7 @@ export default class EventControllers {
 
   unlockEvent = async (req, res, next) => {
     const eventId = req.params;
-    const event = await this.UserService.unlockEvent(eventId);
+    const event = await this.EventService.unlockEvent(eventId);
     new OK({
       message: "unlock event successfully",
       metadata: event
@@ -80,7 +83,7 @@ export default class EventControllers {
   registerEvent = async (req, res, next) => {
     const eventId = req.params;
     const user = req.user;
-    const event = await this.UserService.registerEvent(eventId, user);
+    const event = await this.EventService.registerEvent(eventId, user);
     new CREATED({
       message: "register event successfully",
       metadata: event
@@ -90,7 +93,7 @@ export default class EventControllers {
   cancelEventRegistration = async (req, res, next) => {
     const eventId = req.params;
     const user = req.user;
-    const event = await this.UserService.cancelEventRegistration(eventId,user);
+    const event = await this.EventService.cancelEventRegistration(eventId,user);
     new OK({
       message: "cancel event successfully",
     }).send(res);
@@ -98,7 +101,7 @@ export default class EventControllers {
 
   getEventRegistrations = async (req, res, next) => {
     const eventId = req.params;
-    const allRegistrations = await this.UserService.getEventRegistrations(eventId);
+    const allRegistrations = await this.EventService.getEventRegistrations(eventId);
     new OK({
       message: "registrations retrieved successfully",
       metadata: allRegistrations
