@@ -53,15 +53,6 @@ export default class EventControllers {
     }).send(res);
   }
   
-  deleteEvent = async (req, res, next) => {
-    const eventId = req.params;
-    const event = await this.EventService.getEventById(eventId);
-    new OK({
-      message: "event retrieved successfully",
-      metadata: event
-    }).send(res);
-  }
-
   lockEvent = async (req, res, next) => {
     const eventId = req.params;
     const event = await this.EventService.lockEvent(eventId);
